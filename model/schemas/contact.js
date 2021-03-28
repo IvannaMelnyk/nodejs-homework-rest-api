@@ -11,32 +11,23 @@ const contactSchema = new Schema(
     email: {
       type: String,
       required: [true, "Set email for contact"],
-      unique: true,
+      lowercase: true,
     },
     phone: {
-      type: Number,
-      required: [true, "Set phone for contact"],
+      type: String,
+      required: [true, "User phone number required"],
       unique: true,
     },
     owner: {
       type: SchemaTypes.ObjectId,
       ref: "user",
     },
-    subscription: {
-      type: String,
-      enum: ["free", "pro", "premium"],
-      default: "free",
-    },
-    password: {},
-    token: {},
   },
-  {
-    versionKey: false,
-    timestamps: true,
-  }
+  { versionKey: false, timestamps: true }
 );
 
 contactSchema.plugin(mongoosePaginate);
+
 const Contact = model("contact", contactSchema);
 
 module.exports = Contact;

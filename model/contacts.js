@@ -1,66 +1,58 @@
 const Contact = require("./schemas/contact");
 
-const listContacts = async (
+const getAll = async (
   userId,
-  { sortBy, sortByDesc, filter, limit = "20", page = "1" }
+  { sortBy, sortByDesc, filter, limit = "5", offset = "0" }
 ) => {
-  const results = await Contact.paginate(
+  const result = await Contact.paginate(
     { owner: userId },
     {
       limit,
-      page,
-      sort: {
-        ...(sortBy ? { [`${sortBy}`]: 1 } : {}),
-        ...(sortByDesc ? { [`${sortByDesc}`]: -1 } : {}),
-      },
-      select: filter ? filter.split("|").join(" ") : "",
+      offset,
       populate: {
         path: "owner",
-        select: "email subscription",
+        select: "name email",
       },
     }
   );
-
-  const { docs: contacts, totalDocs: total } = results;
-  return { total: total.toString(), limit, page, contacts };
+  const { docs: contacts, totalDocs: total } = result;
+  return { total: total.toString(), limit, offset, contacts };
 };
 
-const getContactById = async (id, userId) => {
+const getById = async (id, userId) => {
   const result = await Contact.findOne({ _id: id, owner: userId }).populate({
     path: "owner",
-    select: "email subscription",
+    select: "name email",
   });
   return result;
 };
 
-const addContact = async (body) => {
+const create = async (body) => {
   const result = await Contact.create(body);
   return result;
 };
 
-const updateContact = async (id, body, userId) => {
-  const result = await Contact.findByIdAndUpdate(
+const update = async (id, body, userId) => {
+  const result = await Contact.findOneAndUpdate(
     { _id: id, owner: userId },
     { ...body },
     { new: true }
   );
-
   return result;
 };
 
-const removeContact = async (id, userId) => {
-  const result = await Contact.findByIdAndRemove({
+const remove = async (id, userId) => {
+  const result = await Contact.findOneAndRemove({
     _id: id,
     owner: userId,
   });
-
   return result;
 };
 
 module.exports = {
-  listContacts,
-  getContactById,
-  removeContact,
-  addContact,
-  updateContact,
+  getAll,
+  getById,
+  remove,
+  create,
+  update,
 };
