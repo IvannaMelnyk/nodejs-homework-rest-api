@@ -13,8 +13,8 @@ mongoose.connection.on("connected", () => {
   console.log("Mongoose connection to db");
 });
 
-mongoose.connection.on("error", (err) => {
-  console.log(`Mongoose connection error: ${err.message}`);
+mongoose.connection.on("error", ({ message }) => {
+  console.log("Mongoose connection error: ", message);
 });
 
 mongoose.connection.on("disconnected", () => {
@@ -23,7 +23,7 @@ mongoose.connection.on("disconnected", () => {
 
 process.on("SIGINT", async () => {
   await mongoose.connection.close();
-  console.log("Connection for db closed and app termination");
+  console.log("Connection for db closed and app termitation");
   process.exit(1);
 });
 

@@ -1,11 +1,9 @@
 const Joi = require("joi");
 
 const schemaDefault = Joi.object({
-  name: Joi.string().alphanum().min(3).max(30).required(),
   email: Joi.string().email().required(),
-  phone: Joi.string()
-    .pattern(/^(\s*)?(\+)?([- _():=+]?\d[- _():=+]?){10,14}(\s*)?$/)
-    .required(),
+  password: Joi.string().required(),
+  subscription: Joi.string().optional(),
 });
 
 const validate = (schema, obj, next) => {
@@ -20,10 +18,6 @@ const validate = (schema, obj, next) => {
   next();
 };
 
-module.exports.createContact = (req, _res, next) => {
-  return validate(schemaDefault, req.body, next);
-};
-
-module.exports.updateContact = (req, _res, next) => {
+module.exports.createUser = (req, _res, next) => {
   return validate(schemaDefault, req.body, next);
 };
