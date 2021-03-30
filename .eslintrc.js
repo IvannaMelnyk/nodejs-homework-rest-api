@@ -4,7 +4,19 @@ module.exports = {
     es2021: true,
     node: true,
   },
+
   extends: ["standard", "plugin:json/recommended", "prettier"],
+  parser: "@babel/eslint-parser",
+  parserOptions: {
+    sourceType: "module",
+    allowImportExportEverywhere: false,
+    ecmaFeatures: {
+      globalReturn: false,
+    },
+    babelOptions: {
+      configFile: "path/to/config.js",
+    },
+  },
   parserOptions: {
     ecmaVersion: 12,
   },
